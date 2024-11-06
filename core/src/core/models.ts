@@ -141,9 +141,9 @@ const models: Models = {
         },
         endpoint: process.env.OLLAMA_SERVER_URL || "http://localhost:11434", 
         model: {
-            [ModelClass.SMALL]: process.env.OLLAMA_MODEL || "llama3.2",
-            [ModelClass.MEDIUM]: process.env.OLLAMA_MODEL || "hermes3",
-            [ModelClass.LARGE]: process.env.OLLAMA_MODEL || "hermes3:70b",
+            [ModelClass.SMALL]: process.env.SMALL_OLLAMA_MODEL || process.env.OLLAMA_MODEL || "llama3.2",
+            [ModelClass.MEDIUM]: process.env.MEDIUM_OLLAMA_MODEL ||process.env.OLLAMA_MODEL || "hermes3",
+            [ModelClass.LARGE]: process.env.LARGE_OLLAMA_MODEL || process.env.OLLAMA_MODEL || "hermes3:70b",
             [ModelClass.EMBEDDING]: process.env.OLLAMA_EMBEDDING_MODEL || "mxbai-embed-large"
         },
         
