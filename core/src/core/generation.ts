@@ -14,6 +14,16 @@ import models from "./models.ts";
 import { generateText as aiGenerateText } from "ai";
 import { createAnthropicVertex } from "anthropic-vertex-ai";
 
+import { createOllama } from 'ollama-ai-provider';
+
+console.log("Initializing Ollama model.");
+const ollamaProvider = createOllama({
+    baseURL: "https://h725v3ve96okyd-11434.proxy.runpod.net/api",
+})
+const ollama = ollamaProvider("hermes3:405b");
+
+//import { ollama } from 'ollama-ai-provider';
+
 /**
  * Send a message to the model for a text generateText - receive a string back and parse how you'd like
  * @param opts - The options for the generateText request.
@@ -26,6 +36,7 @@ import { createAnthropicVertex } from "anthropic-vertex-ai";
  * @param opts.max_context_length The maximum length of the context to apply to the generateText.
  * @returns The completed message.
  */
+
 
 export async function generateText({
     runtime,
@@ -136,6 +147,31 @@ export async function generateText({
                 );
                 console.log("Received response from local Llama model.");
                 break;
+
+
+
+            case ModelProvider.OLLAMA: {
+                console.log("Initializing Ollama model.");
+                /*
+                const ollamaProvider = createOllama({
+                    baseURL: models[provider].endpoint + "/api",
+                })
+                const ollama = ollamaProvider(model);
+                */
+                const { text: ollamaResponse } = await aiGenerateText({
+                    model: ollama,
+                    prompt: context,
+                    temperature: temperature,
+                    maxTokens: max_response_length,
+                    frequencyPenalty: frequency_penalty,
+                    presencePenalty: presence_penalty,
+                });
+
+                response = ollamaResponse;
+            }
+                console.log("Received response from Ollama model.");
+                break;
+        
 
             default: {
                 const errorMessage = `Unsupported provider: ${provider}`;

@@ -8,6 +8,7 @@ type Models = {
     [ModelProvider.LLAMALOCAL]: Model;
     [ModelProvider.GOOGLE]: Model;
     [ModelProvider.CLAUDE_VERTEX]: Model;
+    [ModelProvider.OLLAMA]: Model;
     // TODO: add OpenRouter - feel free to do this :)
 };
 
@@ -128,6 +129,24 @@ const models: Models = {
             [ModelClass.LARGE]: "gemini-1.5-pro",
             [ModelClass.EMBEDDING]: "text-embedding-004",
         },
+    },
+    [ModelProvider.OLLAMA]: {
+        settings: {
+            stop: [],
+            maxInputTokens: 128000,
+            maxOutputTokens: 8192,
+            frequency_penalty: 0.0,
+            presence_penalty: 0.0,
+            temperature: 0.3,
+        },
+        endpoint: process.env.OLLAMA_SERVER_URL || "http://localhost:11434", 
+        model: {
+            [ModelClass.SMALL]: process.env.OLLAMA_MODEL || "llama3.2",
+            [ModelClass.MEDIUM]: process.env.OLLAMA_MODEL || "hermes3",
+            [ModelClass.LARGE]: process.env.OLLAMA_MODEL || "hermes3:70b",
+            [ModelClass.EMBEDDING]: process.env.OLLAMA_EMBEDDING_MODEL || "mxbai-embed-large"
+        },
+        
     },
 };
 

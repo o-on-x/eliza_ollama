@@ -99,6 +99,7 @@ export type Model = {
 };
 
 export enum ModelProvider {
+    OLLAMA = "ollama",
     OPENAI = "openai",
     ANTHROPIC = "anthropic",
     GROK = "grok",
@@ -106,6 +107,7 @@ export enum ModelProvider {
     LLAMALOCAL = "llama_local",
     GOOGLE = "google",
     CLAUDE_VERTEX = "claude_vertex",
+    
 }
 
 /**

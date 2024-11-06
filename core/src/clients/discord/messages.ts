@@ -260,6 +260,40 @@ export class MessageManager {
                 content: Content,
                 files: any[]
             ) => {
+                    console.log("Content received:", {
+                      text: content.text,
+                      attachments: content.attachments
+                    });
+                    console.log(content.text)
+                    
+                    // Process any data URL attachments
+                    const processedFiles = [...(files || [])];
+                    
+                    if (content.attachments?.length) {
+                      for (const attachment of content.attachments) {
+                        if (attachment.url?.startsWith('data:image')) {
+                          try {
+                            console.log("this is the attachment url : ", attachment.url)
+                            
+                            const {buffer, type} = await this.attachmentManager.processDataUrlToBuffer(attachment.url);
+                            const extension = type.split('/')[1] || 'png';
+                            const fileName = `${attachment.id || Date.now()}.${extension}`;
+                            
+                            processedFiles.push({
+                              attachment: buffer,
+                              name: fileName
+                            });
+                            content.text = "..."
+                            // Update the attachment URL to reference the filename
+                            attachment.url = `attachment://${fileName}`;
+                          } catch (error) {
+                            console.error('Error processing data URL:', error);
+                          }
+                        }
+                      }
+                    }
+                  
+
                 if (message.id && !content.inReplyTo) {
                     content.inReplyTo = stringToUuid(message.id);
                 }
@@ -288,7 +322,7 @@ export class MessageManager {
                         message.channel as TextChannel,
                         content.text,
                         message.id,
-                        files
+                        processedFiles//files
                     );
 
                     const memories: Memory[] = [];

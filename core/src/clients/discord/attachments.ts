@@ -11,6 +11,20 @@ export class AttachmentManager {
         this.runtime = runtime;
     }
 
+    async processDataUrlToBuffer(dataUrl: string): Promise<{buffer: Buffer, type: string}> {
+        const matches = dataUrl.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+        
+        if (!matches || matches.length !== 3) {
+          throw new Error('Invalid data URL');
+        }
+      
+        const type = matches[1];
+        const base64Data = matches[2];
+        const buffer = Buffer.from(base64Data, 'base64');
+        
+        return {buffer, type};
+      }
+      
     async processAttachments(
         attachments: Collection<string, Attachment> | Attachment[]
     ): Promise<Media[]> {
